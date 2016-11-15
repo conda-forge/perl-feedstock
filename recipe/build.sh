@@ -1,5 +1,5 @@
 #!/bin/bash
-sh Configure -de -Dprefix=$PREFIX -Duserelocatableinc
+sh Configure -Duserelocatableinc -Dprefix="${PREFIX}" -de
 make
 make test
 make install
