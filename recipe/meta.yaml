@@ -17,6 +17,10 @@ source:
 build:
   number: 0
 
+requirements:
+  build:
+    - gcc  # [linux]
+
 test:
   commands:
     - perl --help
