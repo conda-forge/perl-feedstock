@@ -3,33 +3,35 @@
 # world-writable files are not allowed
 chmod -R o-w "${SRC_DIR}"
 
-# Give install_name_tool enough room to work its magic
-if [[ $(uname) == Darwin ]]; then
-  LDFLAGS=${LDFLAGS}" -Wl,-headerpad_max_install_names"
-fi
-
-if [[ -n ${HOST} ]] && [[ -n ${CC} ]]; then
-  SYSROOT=$(dirname $(dirname ${CC}))/$(${CC} -dumpmachine)/sysroot
-else
-  SYSROOT=/usr
-fi
-
+declare -a _config_args
+_config_args+=(-Dprefix="${PREFIX}")
+_config_args+=(-Dusethreads)
+_config_args+=(-Duserelocatableinc)
+_config_args+=(-Dcccdlflags="-fPIC")
+_config_args+=(-Dldflags="${LDFLAGS}")
+# .. ran into too many problems with '.' not being on @INC:
+_config_args+=(-Ddefault_inc_excludes_dot=n)
 if [[ -n "${CC}" ]]; then
-  CC_OPT="-Dcc=${CC}"
+  _config_args+=("-Dcc=${CC}")
+fi
+if [[ ${HOST} =~ .*linux.* ]]; then
+  _config_args+=(LDDLFLAGS=-Dlddlflags="-shared ${LDFLAGS}")
+# elif [[ ${HOST} =~ .*darwin.* ]]; then
+#   _config_args+=(LDDLFLAGS=-Dlddlflags=" -bundle -undefined dynamic_lookup ${LDFLAGS}")
+fi
+if [[ -z ${CONDA_BUILD_SYSROOT} ]]; then
+  if [[ -n ${HOST} ]] && [[ -n ${CC} ]]; then
+    _config_args+=("-Dsysroot=$(dirname $(dirname ${CC}))/$(${CC} -dumpmachine)/sysroot")
+  else
+    _config_args+=("-Dsysroot=/usr")
+  fi
 fi
 
 # -Dsysroot prevents Configure rummaging around in /usr and
 # linking to system libraries (like GDBM, which is GPL). An
 # alternative is to pass -Dusecrosscompile but that prevents
 # all Configure/run checks which we also do not want.
-./Configure -de -Dprefix=${PREFIX}                \
-                ${CC_OPT}                         \
-                -Dcccdlflags="-fPIC"              \
-                -Dlddlflags="-shared ${LDFLAGS}"  \
-                -Dldflags="${LDFLAGS}"            \
-                -Dusethreads                      \
-                -Duserelocatableinc               \
-                -Dsysroot=${SYSROOT}
+./Configure -de "${_config_args[@]}"
 make
 
 # change permissions again after building
