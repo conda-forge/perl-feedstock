@@ -11,14 +11,18 @@ _config_args+=(-Dcccdlflags="-fPIC")
 _config_args+=(-Dldflags="${LDFLAGS}")
 # .. ran into too many problems with '.' not being on @INC:
 _config_args+=(-Ddefault_inc_excludes_dot=n)
-if [[ -n "${CC}" ]]; then
-  _config_args+=("-Dcc=${CC}")
+if [[ -n "${GCC:-${CC}}" ]]; then
+  _config_args+=("-Dcc=${GCC:-${CC}}")
 fi
 if [[ ${HOST} =~ .*linux.* ]]; then
-  _config_args+=(LDDLFLAGS=-Dlddlflags="-shared ${LDFLAGS}")
+  _config_args+=(-Dlddlflags="-shared ${LDFLAGS}")
 # elif [[ ${HOST} =~ .*darwin.* ]]; then
-#   _config_args+=(LDDLFLAGS=-Dlddlflags=" -bundle -undefined dynamic_lookup ${LDFLAGS}")
+#   _config_args+=(-Dlddlflags=" -bundle -undefined dynamic_lookup ${LDFLAGS}")
 fi
+# -Dsysroot prevents Configure rummaging around in /usr and
+# linking to system libraries (like GDBM, which is GPL). An
+# alternative is to pass -Dusecrosscompile but that prevents
+# all Configure/run checks which we also do not want.
 if [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
   _config_args+=("-Dsysroot=${CONDA_BUILD_SYSROOT}")
 else
@@ -29,10 +33,6 @@ else
   fi
 fi
 
-# -Dsysroot prevents Configure rummaging around in /usr and
-# linking to system libraries (like GDBM, which is GPL). An
-# alternative is to pass -Dusecrosscompile but that prevents
-# all Configure/run checks which we also do not want.
 ./Configure -de "${_config_args[@]}"
 make
 
