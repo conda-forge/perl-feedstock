@@ -19,7 +19,9 @@ if [[ ${HOST} =~ .*linux.* ]]; then
 # elif [[ ${HOST} =~ .*darwin.* ]]; then
 #   _config_args+=(LDDLFLAGS=-Dlddlflags=" -bundle -undefined dynamic_lookup ${LDFLAGS}")
 fi
-if [[ -z ${CONDA_BUILD_SYSROOT} ]]; then
+if [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
+  _config_args+=("-Dsysroot=${CONDA_BUILD_SYSROOT}")
+else
   if [[ -n ${HOST} ]] && [[ -n ${CC} ]]; then
     _config_args+=("-Dsysroot=$(dirname $(dirname ${CC}))/$(${CC} -dumpmachine)/sysroot")
   else
