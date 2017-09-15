@@ -13,8 +13,8 @@ source:
   sha256: ebe7c66906d4fb55449380ab1b7e004eeef52c38d3443fa301f8e17a1a4cb67f                                        # [unix]
   sha256: 17feff703fc6d0289efc1b1ba7c1309ac53a2efcdced1ddd3f00d7bd87913056                                        # [win64]
   sha256: e4f7530dc546e28684a0d0470e4ff47f16342c598b71f4014cbff77d2b3927b3                                        # [win32]
-  patches:  # [unix]
-    - 0001-_FORTIFY_SOURCE-for-gcc-gt-5-too.patch
+  patches:                                                                                                        # [unix]
+    - 0001-_FORTIFY_SOURCE-for-gcc-gt-5-too.patch                                                                 # [unix]
 
 build:
   number: 0
