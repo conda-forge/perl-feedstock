@@ -13,7 +13,7 @@ source:
 
   fn:   strawberry-perl-{{ version }}-32bit-portable.zip                                                    # [win]
   url:  http://strawberryperl.com/download/{{version}}/strawberry-perl-{{version}}-32bit-portable.zip       # [win]
-  sha1: 6c750c56a4eccf3b5f77af56e4cee572c360a1c2                                                            # [win]
+  sha1: c2dd24fa0103d8db6553b744e29f196ad40cfe4c                                                            # [win]
 
   patches: 
     - patch-perl-unix-test.diff                                                                             # [unix]
