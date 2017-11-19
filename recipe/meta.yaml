@@ -29,9 +29,8 @@ test:
 
 about:
   home: http://www.perl.org/
-  license: Artistic License
+  license: Perl Artistic
   license_family: Other
-  license: Perl
   summary: "The Perl programming language interpreter."
   description: |
     Perl 5 is a highly capable, feature-rich programming language with over 29
