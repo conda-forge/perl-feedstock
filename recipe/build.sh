@@ -10,7 +10,7 @@ if [ `uname -s` == "Darwin" ]; then
     export LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
 fi
 
-sh Configure -Dusethreads -Duserelocatableinc -Dprefix=$PREFIX -de -Aldflags="$LDFLAGS"
+sh Configure -Dusethreads -Duserelocatableinc -Dprefix=$PREFIX -de -Aldflags="$LDFLAGS" -Accflags=-fPIC
 make
 
 # change permissions again after building
