@@ -8,12 +8,12 @@ package:
 
 source:
   url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.gz                                                 # [unix]
-  url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win64]
-  url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-32bit-portable.zip  # [win32]
-  sha256: 572f9cea625d6062f8a63b5cee9d3ee840800a001d2bb201a41b9a177ab7f70d                                        # [unix]
+#  url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win64]
+#  url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-32bit-portable.zip  # [win32]
+  sha256: 7e929f64d4cb0e9d1159d4a59fc89394e27fa1f7004d0836ca0d514685406ea8                                        # [unix]
   # sha1 hashes published at: http://strawberryperl.com/releases.html
-  sha1: 7996609176451c54864f700ffa299ee81712d8bd                                                                  # [win64]
-  sha1: 73564a7cef397c4e0da93612c00fa5f482e652b3                                                                  # [win32]
+#  sha1: 7996609176451c54864f700ffa299ee81712d8bd                                                                  # [win64]
+#  sha1: 73564a7cef397c4e0da93612c00fa5f482e652b3                                                                  # [win32]
 
 build:
   number: 1
