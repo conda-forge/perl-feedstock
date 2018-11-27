@@ -23,15 +23,18 @@ fi
 # linking to system libraries (like GDBM, which is GPL). An
 # alternative is to pass -Dusecrosscompile but that prevents
 # all Configure/run checks which we also do not want.
-#if [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
-#  _config_args+=("-Dsysroot=${CONDA_BUILD_SYSROOT}")
-#else
-#  if [[ -n ${HOST} ]] && [[ -n ${CC} ]]; then
-#    _config_args+=("-Dsysroot=$(dirname $(dirname ${CC}))/$(${CC} -dumpmachine)/sysroot")
-#  else
-#    _config_args+=("-Dsysroot=/usr")
-#  fi
-#fi
+# remove this if after the gcc7 migration
+if [[ ! ${c_compiler} =~ .*toolchain.* ]]; then
+  if [[ -n ${CONDA_BUILD_SYSROOT} ]]; then
+    _config_args+=("-Dsysroot=${CONDA_BUILD_SYSROOT}")
+  else
+    if [[ -n ${HOST} ]] && [[ -n ${CC} ]]; then
+      _config_args+=("-Dsysroot=$(dirname $(dirname ${CC}))/$(${CC} -dumpmachine)/sysroot")
+    else
+      _config_args+=("-Dsysroot=/usr")
+    fi
+  fi
+fi
 
 ./Configure -de "${_config_args[@]}"
 make

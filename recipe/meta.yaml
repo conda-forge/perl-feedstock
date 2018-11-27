@@ -16,7 +16,7 @@ source:
 #  sha1: 73564a7cef397c4e0da93612c00fa5f482e652b3                                                                  # [win32]
 
 build:
-  number: 0
+  number: 1000
 
 requirements:
   build:
@@ -24,9 +24,9 @@ requirements:
     - make                  # [unix]
 
 test:
-  downstreams:
-    - git
-    - automake
+  # downstreams:
+  #   - git
+  #   - automake
   commands:
     - perl --help
 
