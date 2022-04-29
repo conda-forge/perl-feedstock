@@ -26,7 +26,7 @@ declare -a _config_args
 #  - non-(minor)-version specific files go in PREFIX/lib/perl5
 #  - (minor) version specific files go in, e.g., PREFIX/lib/perl5/5.32
 
-perl_lib=".../../lib/perl5"
+perl_lib="../../lib/perl5"
 perl_archlib="${perl_lib}/${PKG_VERSION%.*}"
 perl_core=/core_perl
 perl_site=/site_perl
