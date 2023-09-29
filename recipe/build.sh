@@ -128,7 +128,7 @@ fi
 if [[ "${target_platform}" == osx-* ]]; then
   sed -i.bak "s|--sysroot=$SDKROOT||g" Config_heavy.pl
   sed -i.bak "s|$SDKROOT|\$sdkroot|g" Config_heavy.pl
-  sed -i.bak "/^lddlflags/ s|-Wl,-rpath||g" Config_heavy.pl
+  sed -i.bak "/^lddlflags/ s|-Wl,-rpath,|-rpath |g" Config_heavy.pl
   sed -i.bak "/^lddlflags/ s|-Wl,||g" Config_heavy.pl
   sed -i.bak "/^lddlflags/ s|-mmacosx-version-min=[0-9\.]*||g" Config_heavy.pl
   sed -i.bak "/^lddlflags/ s|-fstack-protector-strong||g" Config_heavy.pl
