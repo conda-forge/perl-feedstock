@@ -1,4 +1,4 @@
-From 37a9df5253244baa70ed65969d93828d502f3cc2 Mon Sep 17 00:00:00 2001
+From d87435a0aeb62db693a063af798fc1d86f7a2b09 Mon Sep 17 00:00:00 2001
 From: Marcel Bargull <marcel.bargull@udo.edu>
 Date: Fri, 22 Dec 2023 15:46:57 +0100
 Subject: [PATCH 2/2] Disable direct invocation of linker if LD is set
@@ -17,7 +17,7 @@ Signed-off-by: Marcel Bargull <marcel.bargull@udo.edu>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm b/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm
-index 638014352c..5251257b55 100644
+index 0494cafd95..f2c1935e03 100644
 --- a/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm
 +++ b/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm
 @@ -41,7 +41,7 @@ sub new {

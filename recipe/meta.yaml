@@ -1,5 +1,5 @@
-{% set unix_version = "5.32.1" %}
-{% set win_version = unix_version + ".1" %}
+{% set unix_version = "5.38.2" %}
+{% set win_version = unix_version + ".2" %}
 {% set major_minor_version = unix_version.split(".")[:2] | join(".") %}
 
 package:
@@ -8,19 +8,17 @@ package:
   version: {{ win_version }}   # [win]
 
 source:
-  - url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.xz                                                 # [unix]
-    sha256: 57cc47c735c8300a8ce2fa0643507b44c4ae59012bfdad0121313db639e02309                                        # [unix]
-    patches:                                                                                                        # [unix]
-      - 0001-Use-userelocatableinc-together-with-useshrplib.patch                                                   # [unix]
-      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch                                                 # [unix]
-  - url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win64]
-    url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-32bit-portable.zip  # [win32]
-    sha1: fac226b31461f2392702822052a3a5628917f857                                                                  # [win64]
-    sha1: 28bca91cadd6651c2b2463db8587c170bf17f2fa                                                                  # [win32]
+  - url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.xz           # [unix]
+    sha256: d91115e90b896520e83d4de6b52f8254ef2b70a8d545ffab33200ea9f1cf29e8  # [unix]
+    patches:                                                                  # [unix]
+      - 0001-Use-userelocatableinc-together-with-useshrplib.patch             # [unix]
+      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch           # [unix]
+  - url: https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_{{ win_version | replace(".", "") }}_64bit/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win]
+    sha256: ea451686065d6338d7e4d4a04c9af49f17951d15aa4c2e19ab8cb56fa2373440  # [win]
     # sha1 hashes published at: http://strawberryperl.com/releases.html
 
 build:
-  number: 7
+  number: 0
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_strawberry  # [win]
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_perl5       # [not win]
   run_exports:
