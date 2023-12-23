@@ -12,3 +12,6 @@ github:
   tooling_branch_name: main
 conda_build:
   pkg_format: '2'
+remote_ci_setup:
+  - conda-build=3.27
+  - conda-forge-ci-setup=4
