@@ -2,6 +2,9 @@ build_platform: {osx_arm64: osx_64}
 conda_forge_output_validation: true
 provider: {linux_aarch64: default, linux_ppc64le: default}
 test_on_native_only: true
+bot:
+  abi_migration_branches:
+  - "5.32.x"
 azure:
   store_build_artifacts: true
 github:
@@ -9,3 +12,6 @@ github:
   tooling_branch_name: main
 conda_build:
   pkg_format: '2'
+remote_ci_setup:
+  - conda-build=3.27
+  - conda-forge-ci-setup=4
