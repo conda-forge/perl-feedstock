@@ -20,7 +20,7 @@ source:
     # sha1 hashes published at: http://strawberryperl.com/releases.html
 
 build:
-  number: 7
+  number: 8
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_strawberry  # [win]
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_perl5       # [not win]
   run_exports:
@@ -30,10 +30,7 @@ build:
         *_strawberry  # [win]
         *_perl5       # [not win]
     noarch:
-      - >-
-        {{ pin_subpackage("perl", max_pin="x") }}
-        *_strawberry  # [win]
-        *_perl5       # [not win]
+      - {{ pin_subpackage("perl", max_pin="x") }}
 
 requirements:
   build:
