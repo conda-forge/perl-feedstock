@@ -1,0 +1,25 @@
+From 09c1b542321d030fa7b7faa3e79c864895d74686 Mon Sep 17 00:00:00 2001
+From: Jeremy Volkening <jdvolkening@gmail.com>
+Date: Wed, 21 Feb 2024 03:50:50 -0600
+Subject: [PATCH] allow -t TTY to fail on Windows
+
+---
+ t/op/stat.t | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/t/op/stat.t b/t/op/stat.t
+index 5ad119c..c880509 100644
+--- a/t/op/stat.t
++++ b/t/op/stat.t
+@@ -374,7 +374,7 @@ SKIP: {
+     ok(! -t TTY,    '!-t on closed TTY filehandle');
+ 
+     {
+-        local our $TODO = 'STDIN not a tty when output is to pipe' if $Is_VMS;
++        local our $TODO = 'STDIN not a tty when output is to pipe' if ($Is_VMS || $Is_MSWin32);
+         ok(-t,          '-t on STDIN');
+     }
+ }
+-- 
+2.43.0.windows.1
+
