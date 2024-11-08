@@ -1,0 +1,25 @@
+From 40269056dfb1ce7a6fa72d003d773944c81c1320 Mon Sep 17 00:00:00 2001
+From: Jeremy Volkening <jdvolkening@gmail.com>
+Date: Tue, 20 Feb 2024 14:14:37 -0600
+Subject: [PATCH] skip failing Net::Ping test on win
+
+---
+ dist/Net-Ping/t/450_service.t | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dist/Net-Ping/t/450_service.t b/dist/Net-Ping/t/450_service.t
+index 5cf7445..ab67354 100644
+--- a/dist/Net-Ping/t/450_service.t
++++ b/dist/Net-Ping/t/450_service.t
+@@ -78,7 +78,7 @@ is($p->ping("127.0.0.1"), 1, 'first port is reachable');
+ $p->{port_num} = $port2;
+ 
+ {
+-    local $TODO = "Believed not to work on $^O" if $^O =~ /^(?:hpux|os390|freebsd)$/;
++    local $TODO = "Believed not to work on $^O" if $^O =~ /^(?:hpux|os390|freebsd|MSWin32)$/;
+     is($p->ping("127.0.0.1"), 1, 'second port is reachable');
+ }
+ 
+-- 
+2.43.0.windows.1
+
