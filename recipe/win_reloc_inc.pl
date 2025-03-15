@@ -1,6 +1,10 @@
 use strict;
 use warnings;
 
+# This script patches the perl DLL on Windows by replacing a specific placeholder
+# string assigned to the 'otherlibdirs' configuration option with the actual
+# paths specific to the installed location
+
 my $vers = $ENV{PKG_VERSION}
     // die "PKG_VERSION empty, can't determine version string";
 my ($major, $minor) = split /\./, $vers;
@@ -19,9 +23,9 @@ my $replacement = join ';',
     map { "$ENV{PREFIX}/lib/perl5/$_" }
     map { $_, "$major.$minor/$_" }
     qw/
-    	core_perl
-	site_perl
-	vendor_perl
+        core_perl
+        site_perl
+        vendor_perl
     /;
 die "Replacement paths too long, must be <= 256 characters"
     if (length $placeholder < length $replacement);
@@ -35,8 +39,6 @@ die "Replacement paths too long, must be <= 256 characters"
 
 my $padding = length($placeholder) - length($replacement);
 $replacement .= ';' x $padding;
-my $l_ph = length $placeholder;
-my $l_re = length $replacement;
 die "Replacement length still unequal after padding"
     if (length $placeholder != length $replacement);
 
@@ -47,11 +49,9 @@ local $/ = undef;
 my $dll = <$in>;
 close $in;
 
-my $len_orig = length $dll;
-
 # perform actual substitution and ensure that exactly one substitution
 # was made and the sizes still match
-
+my $len_orig = length $dll;
 my $n_replacements
     = ($dll =~ s/$placeholder/$replacement/g);
 die "No placeholders found for replacement!"
@@ -61,7 +61,7 @@ die "Too many placeholders found for replacement!"
 die "Altered DLL size different than original"
     if (length $dll != $len_orig);
 
-# if everything still looks okay, overwrite original file
+# if everything still looks okay, write new file
 open my $out, '>:raw', $fn_out
     or die "Error opening $fn_out: $!";
 print {$out} $dll;

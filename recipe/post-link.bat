@@ -2,6 +2,7 @@ for %%f in (%PKG_VERSION%) do set MAJOR_MINOR=%%~nf
 
 set DLLNAME="%PREFIX%\bin\perl%MAJOR_MINOR:.=%.dll"
 
+REM Patch the main perl DLL with the (now known) installed library paths
 %PREFIX%\bin\perl.exe ^
  "%PREFIX%\lib\perl5\win_reloc_inc.pl" ^
  %DLLNAME% ^
