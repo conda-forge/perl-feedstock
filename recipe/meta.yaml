@@ -19,7 +19,6 @@ source:
       - patches/0008-skip-newly-failing-Win32-tests.patch  # [win]
 
 build:
-  skip: True  # [not win]
   number: 8
   run_exports:
     weak:
