@@ -33,7 +33,7 @@ copy %PREFIX%\bin\perl.exe %PREFIX%\Library\bin
 
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-copy %RECIPE_DIR%\win_reloc_inc.pl %PERL_LIB%
+copy %RECIPE_DIR%\patches\win_reloc_inc.pl %PERL_LIB%
 
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 

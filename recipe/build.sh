@@ -112,7 +112,7 @@ make install -j${CPU_COUNT}
 
 # Replace hard-coded BUILD_PREFIX by value from env as CC, CFLAGS etc need to be properly set to be usable by ExtUtils::MakeMaker module
 pushd "${perl_archlib/...\/../${PREFIX}}${perl_core}"
-patch -p1 < "${RECIPE_DIR}/dynamic_config.patch"
+patch -p1 < "${RECIPE_DIR}/patches/dynamic_config.patch"
 sed -i.bak "s|${BUILD_PREFIX}|\$compilerroot|g" Config_heavy.pl
 
 sed -i.bak "s|${BUILD_PREFIX}|\$compilerroot|g" Config.pm

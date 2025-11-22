@@ -9,14 +9,14 @@ source:
   - url: http://www.cpan.org/src/5.0/perl-{{ version }}.tar.xz
     sha256: 57cc47c735c8300a8ce2fa0643507b44c4ae59012bfdad0121313db639e02309
     patches:
-      - 0001-Use-userelocatableinc-together-with-useshrplib.patch  # [unix]
-      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch
-      - 0003-update-setting-for-conda-directory-structure.patch  # [win]
-      - 0004-skip-failing-Net-Ping-test-on-win.patch  # [win]
-      - 0005-skip-perlbug-test-that-fails-on-multiple-platforms.patch
-      - 0006-allow-t-TTY-to-fail-on-Windows.patch  # [win]
-      - 0007-skip-several-tests-on-non-AMD64-unix.patch  # [unix]
-      - 0008-skip-newly-failing-Win32-tests.patch  # [win]
+      - patches/0001-Use-userelocatableinc-together-with-useshrplib.patch  # [unix]
+      - patches/0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch
+      - patches/0003-update-setting-for-conda-directory-structure.patch  # [win]
+      - patches/0004-skip-failing-Net-Ping-test-on-win.patch  # [win]
+      - patches/0005-skip-perlbug-test-that-fails-on-multiple-platforms.patch
+      - patches/0006-allow-t-TTY-to-fail-on-Windows.patch  # [win]
+      - patches/0007-skip-several-tests-on-non-AMD64-unix.patch  # [unix]
+      - patches/0008-skip-newly-failing-Win32-tests.patch  # [win]
 
 build:
   skip: True  # [not win]
