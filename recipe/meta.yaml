@@ -17,6 +17,7 @@ source:
       - patches/0006-allow-t-TTY-to-fail-on-Windows.patch  # [win]
       - patches/0007-skip-several-tests-on-non-AMD64-unix.patch  # [unix]
       - patches/0008-skip-newly-failing-Win32-tests.patch  # [win]
+      - patches/0009-skip-known-failing-DynaLoader-test-on-OS-X.patch  # [osx]
 
 build:
   number: 8
