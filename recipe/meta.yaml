@@ -1,6 +1,7 @@
-{% set unix_version = "5.32.1" %}
+{% set unix_version = "5.42.0" %}
 {% set win_version = unix_version + ".1" %}
 {% set major_minor_version = unix_version.split(".")[:2] | join(".") %}
+{% set win_version_str = win_version.split(".") | join("") %}
 
 package:
   name: perl
@@ -9,18 +10,16 @@ package:
 
 source:
   - url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.xz                                                 # [unix]
-    sha256: 57cc47c735c8300a8ce2fa0643507b44c4ae59012bfdad0121313db639e02309                                        # [unix]
+    sha256: 73cf6cc1ea2b2b1c110a18c14bbbc73a362073003893ffcedc26d22ebdbdd0c3                                        # [unix]
     patches:                                                                                                        # [unix]
       - 0001-Use-userelocatableinc-together-with-useshrplib.patch                                                   # [unix]
-      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch                                                 # [unix]
-  - url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win64]
-    url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-32bit-portable.zip  # [win32]
-    sha1: fac226b31461f2392702822052a3a5628917f857                                                                  # [win64]
-    sha1: 28bca91cadd6651c2b2463db8587c170bf17f2fa                                                                  # [win32]
+      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch       
+  - url: https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_{{ win_version_str }}_64bit/strawberry-perl-{{ win_version }}-64bit-portable.zip # [win64]
+    sha256: sha256:a1cde185656cf307b51670eed69f648b9eff15b5c518cb136e027c628e650b71                                 # [win64]
     # sha1 hashes published at: http://strawberryperl.com/releases.html
 
 build:
-  number: 7
+  number: 0
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_strawberry  # [win]
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_perl5       # [not win]
   run_exports:

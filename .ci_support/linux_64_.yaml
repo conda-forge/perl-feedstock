@@ -7,8 +7,8 @@ channel_sources:
 channel_targets:
 - conda-forge main
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-x86_64:cos7
 perl:
-- 5.32.1
+- 5.42.0
 target_platform:
 - linux-64
