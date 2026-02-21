@@ -1,8 +1,11 @@
 #!/bin/bash
 
+if [[ "${target_platform}" == osx-arm64 ]]; then
+  export MACOSX_DEPLOYMENT_TARGET=11.0
+fi
+
 if [[ "${build_platform}" == osx-64 && "${target_platform}" == osx-arm64 ]]; then
   archflags="-arch x86_64 -arch arm64"
-  export MACOSX_DEPLOYMENT_TARGET=10.9
 fi
 
 if [[ "${target_platform}" == osx-* ]]; then
@@ -96,6 +99,12 @@ _config_args+=(
 )
 
 ./Configure -de "${_config_args[@]}"
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" ]]; then
+  # Replace ./perl with ./miniperl for any build-time script execution.
+  # miniperl is a fat binary that runs on the x86_64 host; the full perl
+  # depends on arm64-only XS bundles that cannot be dlopen'd on the host.
+  sed -i.bak 's|^RUN_PERL = .*|RUN_PERL = $(LDLIBPTH) ./miniperl -Ilib -I.|' Makefile
+fi
 make
 
 # change permissions again after building

@@ -13,6 +13,10 @@ channel_targets:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 perl:
-- 5.32.1
+- 5.42.0
 target_platform:
 - osx-64
+c_stdlib:
+  - macosx_deployment_target 
+c_stdlib_version:
+  - "11.0"     

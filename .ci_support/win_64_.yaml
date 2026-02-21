@@ -3,6 +3,6 @@ channel_sources:
 channel_targets:
 - conda-forge main
 perl:
-- 5.32.1
+- 5.42.0
 target_platform:
 - win-64

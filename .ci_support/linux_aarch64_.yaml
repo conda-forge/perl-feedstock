@@ -9,6 +9,10 @@ channel_targets:
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64:alma9
 perl:
-- 5.32.1
+- 5.42.0
 target_platform:
 - linux-aarch64
+c_stdlib:
+  - sysroot 
+c_stdlib_version:  
+  - "2.17"
