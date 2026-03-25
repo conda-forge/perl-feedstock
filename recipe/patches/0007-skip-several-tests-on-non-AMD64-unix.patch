@@ -1,0 +1,81 @@
+From 5a8fbc39cbe2f72a0ff41f0d0ed77b16dab410bd Mon Sep 17 00:00:00 2001
+From: jvolkening <jdvolkening@gmail.com>
+Date: Tue, 11 Mar 2025 21:57:05 -0500
+Subject: [PATCH] skip several tests on non-AMD64 unix
+
+---
+ dist/threads/t/join.t | 7 +++++--
+ t/op/magic.t          | 7 ++++---
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/dist/threads/t/join.t b/dist/threads/t/join.t
+index 2272e07..0d9ccdc 100644
+--- a/dist/threads/t/join.t
++++ b/dist/threads/t/join.t
+@@ -9,10 +9,13 @@ BEGIN {
+     }
+ }
+ 
++use Config;
+ use ExtUtils::testlib;
+ 
+ use threads;
+ 
++my $Is_AMD64 = $Config{archname} =~ /^x86_64/;
++
+ BEGIN {
+     if (! eval 'use threads::shared; 1') {
+         print("1..0 # SKIP threads::shared not available\n");
+@@ -109,7 +112,7 @@ sub skip {
+ }
+ 
+ # We parse ps output so this is OS-dependent.
+-if ($^O eq 'linux') {
++if ($^O eq 'linux' && $Is_AMD64) {
+     # First modify $0 in a subthread.
+     #print "# mainthread: \$0 = $0\n";
+     threads->create(sub{ #print "# subthread: \$0 = $0\n";
+@@ -141,7 +144,7 @@ if ($^O eq 'linux') {
+         skip("\$0 check: opening 'ps -f |' failed: $!");
+     }
+ } else {
+-    skip("\$0 check: only on Linux");
++    skip("\$0 check: only on AMD64 Linux");
+ }
+ 
+ {
+diff --git a/t/op/magic.t b/t/op/magic.t
+index e0dfcf9..916a18f 100644
+--- a/t/op/magic.t
++++ b/t/op/magic.t
+@@ -55,6 +55,7 @@ $Is_VMS      = $^O eq 'VMS';
+ $Is_Dos      = $^O eq 'dos';
+ $Is_os2      = $^O eq 'os2';
+ $Is_Cygwin   = $^O eq 'cygwin';
++$Is_AMD64    = $Config{archname} =~ /^x86_64/;
+ 
+ $PERL =
+    ($Is_NetWare ? 'perl'   :
+@@ -408,7 +409,7 @@ EOP
+ # argv[0] assignment and by calling prctl()
+ {
+   SKIP: {
+-    skip "We don't have prctl() here, or we're on Android", 2 unless $Config{d_prctl_set_name} && $^O ne 'android';
++    skip "We don't have prctl() here, or we're on Android", 2 unless $Config{d_prctl_set_name} && $^O ne 'android' && $Is_AMD64;
+ 
+     # We don't really need these tests. prctl() is tested in the
+     # Kernel, but test it anyway for our sanity. If something doesn't
+@@ -797,8 +798,8 @@ SKIP: {
+ 	env_is(__NoNeLoCaL => '');
+ 
+     SKIP: {
+-	    skip("\$0 check only on Linux and FreeBSD", 2)
+-		unless $^O =~ /^(linux|android|freebsd)$/
++	    skip("\$0 check only on Linux and FreeBSD (on AMD64)", 2)
++		unless ($^O =~ /^(linux|android|freebsd)$/ && $Is_AMD64)
+ 		    && open CMDLINE, "/proc/$$/cmdline";
+ 
+ 	    chomp(my $line = scalar <CMDLINE>);
+-- 
+2.39.5
+

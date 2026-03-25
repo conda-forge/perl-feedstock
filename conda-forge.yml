@@ -9,3 +9,5 @@ github:
 conda_build:
   pkg_format: '2'
 test: native_and_emulated
+os_version:
+  linux_64: cos7 # Perl tests currently fail on AlmaLinux
