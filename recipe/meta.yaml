@@ -10,18 +10,18 @@ package:
 
 # sha1 hashes published at: http://strawberryperl.com/releases.html
 source:
-  - url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.xz  # [unix]
-    sha256: 73cf6cc1ea2b2b1c110a18c14bbbc73a362073003893ffcedc26d22ebdbdd0c3  # [unix]
-    patches:
-      - 0001-Use-userelocatableinc-together-with-useshrplib.patch   # [unix]
-      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch  # [unix]
-  - url: https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_{{ win_version_str }}_64bit/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win64]
-    sha256: a1cde185656cf307b51670eed69f648b9eff15b5c518cb136e027c628e650b71  # [win64]
+  - url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.xz                                                                                                     # [unix]
+    sha256: 73cf6cc1ea2b2b1c110a18c14bbbc73a362073003893ffcedc26d22ebdbdd0c3                                                                                            # [unix]
+    patches:                                                                                                                                                            # [unix]                                                    
+      - 0001-Use-userelocatableinc-together-with-useshrplib.patch                                                                                                       # [unix]
+      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch                                                                                                     # [unix]
+  - url: https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_{{ win_version_str }}_64bit/strawberry-perl-{{ win_version }}-64bit-portable.zip   # [win64]
+    sha256: a1cde185656cf307b51670eed69f648b9eff15b5c518cb136e027c628e650b71                                                                                            # [win64]
 
 build:
   number: 0
   string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_strawberry  # [win]
-  string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_perl5  # [not win]
+  string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_perl5       # [not win]
   run_exports:
     weak:
       - >-
