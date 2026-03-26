@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [[ "${target_platform}" == osx-arm64 ]]; then
-  export MACOSX_DEPLOYMENT_TARGET=11.0
-fi
-
 if [[ "${build_platform}" == osx-64 && "${target_platform}" == osx-arm64 ]]; then
   archflags="-arch x86_64 -arch arm64"
 fi
