@@ -1,94 +1,118 @@
-{% set unix_version = "5.32.1" %}
-{% set win_version = unix_version + ".1" %}
-{% set major_minor_version = unix_version.split(".")[:2] | join(".") %}
+schema_version: 1
+
+context:
+  unix_version: "5.32.1"
+  win_version: "5.32.1.1"
+  major_minor_version: "5.32"
 
 package:
   name: perl
-  version: {{ unix_version }}  # [not win]
-  version: {{ win_version }}   # [win]
+  version: ${{ win_version if win else unix_version }}
 
 source:
-  - url: http://www.cpan.org/src/5.0/perl-{{ unix_version }}.tar.xz                                                 # [unix]
-    sha256: 57cc47c735c8300a8ce2fa0643507b44c4ae59012bfdad0121313db639e02309                                        # [unix]
-    patches:                                                                                                        # [unix]
-      - 0001-Use-userelocatableinc-together-with-useshrplib.patch                                                   # [unix]
-      - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch                                                 # [unix]
-  - url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-64bit-portable.zip  # [win64]
-    url: http://strawberryperl.com/download/{{ win_version }}/strawberry-perl-{{ win_version }}-32bit-portable.zip  # [win32]
-    sha1: fac226b31461f2392702822052a3a5628917f857                                                                  # [win64]
-    sha1: 28bca91cadd6651c2b2463db8587c170bf17f2fa                                                                  # [win32]
-    # sha1 hashes published at: http://strawberryperl.com/releases.html
+  - if: unix
+    then:
+      url: http://www.cpan.org/src/5.0/perl-${{ unix_version }}.tar.xz
+      sha256: 57cc47c735c8300a8ce2fa0643507b44c4ae59012bfdad0121313db639e02309
+      patches:
+        - 0001-Use-userelocatableinc-together-with-useshrplib.patch
+        - 0002-Disable-direct-invocation-of-linker-if-LD-is-set.patch
+  - if: win64
+    then:
+      url: https://strawberryperl.com/download/${{ win_version }}/strawberry-perl-${{ win_version }}-64bit-portable.zip
+      sha256: 692646105b0f5e058198a852dc52a48f1cebcaf676d63bbdeae12f4eaee9bf5c
+  - if: win32
+    then:
+      url: https://strawberryperl.com/download/${{ win_version }}/strawberry-perl-${{ win_version }}-32bit-portable.zip
+      sha256: d9c5711d12573a0f6d977792caa58364b1d46217521ae5c25cf5cc378a7c23c0
 
 build:
   number: 8
-  string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_strawberry  # [win]
-  string: {{ PKG_BUILDNUM }}_h{{ PKG_HASH }}_perl5       # [not win]
-  run_exports:
-    weak:
-      - >-
-        {{ pin_subpackage("perl", max_pin="x.x") }}
-        *_strawberry  # [win]
-        *_perl5       # [not win]
-    noarch:
-      - >-
-        {{ pin_subpackage("perl", max_pin="x") }}
-        *_strawberry  # [win]
-        *_perl5       # [not win]
+  string: ${{ build_number }}_h${{ hash }}_${{ 'strawberry' if target_platform == 'win-64' or target_platform == 'win-32' else 'perl5' }}
+  script: build
 
 requirements:
   build:
-    - {{ compiler('c') }}  # [unix]
-    - {{ stdlib("c") }}    # [unix]
-    - make                 # [unix]
-    - posix                # [win]
+    - if: unix
+      then:
+        - ${{ compiler('c') }}
+        - ${{ stdlib('c') }}
+        - make
+    - if: win
+      then: m2-base
   host:
-    - libxcrypt  # [linux]
+    - if: linux
+      then: libxcrypt
+  run_exports:
+    weak:
+      - perl >=${{ win_version if win else unix_version }},<5.33.0a0 *_${{ 'strawberry' if win else 'perl5' }}
+    noarch:
+      - perl >=${{ win_version if win else unix_version }},<6.0a0 *_${{ 'strawberry' if win else 'perl5' }}
 
-test:
-  # downstreams:
-  #   - git
-  #   - automake
-  commands:
-    - perl --help
-    - |
-      "${PREFIX}/bin/perl" -V:cf_by | grep -qF "'conda'"  # [unix]
-      "${PREFIX}/bin/perl" -V:cf_email | grep -qF "'conda'"  # [unix]
-      "${PREFIX}/bin/perl" -V:perladmin | grep -qF "'conda'"  # [unix]
-      "${PREFIX}/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "${PREFIX}/lib/perl5/site_perl"  # [unix]
-      "${PREFIX}/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "${PREFIX}/lib/perl5/vendor_perl"  # [unix]
-      "${PREFIX}/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "${PREFIX}/lib/perl5/core_perl"  # [unix]
-      "${PREFIX}/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "${PREFIX}/lib/perl5/{{ major_minor_version }}/site_perl"  # [unix]
-      "${PREFIX}/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "${PREFIX}/lib/perl5/{{ major_minor_version }}/vendor_perl"  # [unix]
-      "${PREFIX}/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "${PREFIX}/lib/perl5/{{ major_minor_version }}/core_perl"  # [unix]
-    # conda replaces back- by forward slashes during prefix placeholder replacement on installs:
-    #   This means our Config.pm and Config_heavy.pl etc. carry mixed back-/forward slashes
-    #   which Perl seems to handle well, though.
-    #   refs:
-    #     - https://github.com/conda/conda/blob/4.10.3/conda/core/portability.py#L37-L40
-    #     - https://github.com/conda/conda/pull/2630#discussion_r66468372
-    - perl -V:privlib | findstr "/C:%PREFIX:\=/%\Library\lib"  # [win]
-    - perl -V:archlib | findstr "/C:%PREFIX:\=/%\Library\lib"  # [win]
-    - perl -V:sitelib | findstr "/C:%PREFIX:\=/%\Library\site\lib"  # [win]
-    - perl -V:sitearch | findstr "/C:%PREFIX:\=/%\Library\site\lib"  # [win]
-    - perl -V:vendorlib | findstr "/C:%PREFIX:\=/%\Library\vendor\lib"  # [win]
-    - perl -V:vendorarch | findstr "/C:%PREFIX:\=/%\Library\vendor\lib"  # [win]
+tests:
+  - package_contents:
+      bin:
+        - perl
+  - if: unix
+    then:
+      requirements:
+        build:
+          - ${{ stdlib('c') }}
+      script:
+        - if: build_platform != target_platform
+          then: export QEMU_LD_PREFIX="$CONDA_PREFIX/${target_platform#linux-}-conda-linux-gnu/sysroot"
+        - perl --help
+        - >-
+          "$PREFIX/bin/perl" -V:cf_by | grep -qF "'conda'"
+        - >-
+          "$PREFIX/bin/perl" -V:cf_email | grep -qF "'conda'"
+        - >-
+          "$PREFIX/bin/perl" -V:perladmin | grep -qF "'conda'"
+        - >-
+          "$PREFIX/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "$PREFIX/lib/perl5/site_perl"
+        - >-
+          "$PREFIX/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "$PREFIX/lib/perl5/vendor_perl"
+        - >-
+          "$PREFIX/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "$PREFIX/lib/perl5/core_perl"
+        - >-
+          "$PREFIX/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "$PREFIX/lib/perl5/${{ major_minor_version }}/site_perl"
+        - >-
+          "$PREFIX/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "$PREFIX/lib/perl5/${{ major_minor_version }}/vendor_perl"
+        - >-
+          "$PREFIX/bin/perl" -e 'print "$_\n" for @INC' | grep -qxF "$PREFIX/lib/perl5/${{ major_minor_version }}/core_perl"
+  # Conda replaces backslashes with forward slashes during prefix replacement,
+  # leaving mixed separators in Config.pm and Config_heavy.pl. Perl supports it.
+  - if: win
+    then:
+      script:
+        - perl --help
+        - perl -V:privlib | findstr "/C:%PREFIX:\=/%\Library\lib"
+        - perl -V:archlib | findstr "/C:%PREFIX:\=/%\Library\lib"
+        - perl -V:sitelib | findstr "/C:%PREFIX:\=/%\Library\site\lib"
+        - perl -V:sitearch | findstr "/C:%PREFIX:\=/%\Library\site\lib"
+        - perl -V:vendorlib | findstr "/C:%PREFIX:\=/%\Library\vendor\lib"
+        - perl -V:vendorarch | findstr "/C:%PREFIX:\=/%\Library\vendor\lib"
 
 about:
-  home: http://www.perl.org/
+  homepage: http://www.perl.org/
+  documentation: https://www.perl.org/docs.html
+  repository: https://perl5.git.perl.org/perl.git
   license: GPL-1.0-or-later OR Artistic-1.0-Perl
   license_file:
-    - Artistic  # [unix]
-    - Copying   # [unix]
-    - licenses/perl/Artistic  # [win]
-    - licenses/perl/Copying  # [win]
-  summary: "The Perl programming language interpreter."
+    - if: unix
+      then:
+        - Artistic
+        - Copying
+    - if: win
+      then:
+        - licenses/perl/Artistic
+        - licenses/perl/Copying
+  summary: The Perl programming language interpreter.
   description: |
     Perl 5 is a highly capable, feature-rich programming language with over 29
     years of development. Perl 5 runs on over 100 platforms from portables to
     mainframes and is suitable for both rapid prototyping and large scale
     development projects.
-  doc_url: https://www.perl.org/docs.html
-  dev_url: https://perl5.git.perl.org/perl.git
 
 extra:
   recipe-maintainers:
