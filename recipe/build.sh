@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Perl's Configure runs target probes. Point QEMU at the target sysroot when
+# cross-building so the target dynamic loader and libc can be found.
+if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" == "1" && "${target_platform}" == linux-* ]]; then
+  export QEMU_LD_PREFIX="${CONDA_BUILD_SYSROOT}"
+fi
+
 if [[ "${build_platform}" == osx-64 && "${target_platform}" == osx-arm64 ]]; then
   archflags="-arch x86_64 -arch arm64"
   export MACOSX_DEPLOYMENT_TARGET=10.9
