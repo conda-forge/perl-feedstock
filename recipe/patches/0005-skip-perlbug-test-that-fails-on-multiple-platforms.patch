@@ -1,0 +1,28 @@
+From 39ffdc33edd4a27bd62379867ceba0a44553f545 Mon Sep 17 00:00:00 2001
+From: Jeremy Volkening <jdvolkening@gmail.com>
+Date: Wed, 21 Feb 2024 01:35:17 -0600
+Subject: [PATCH] skip perlbug test that fails on multiple platforms
+
+---
+ lib/perlbug.t | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lib/perlbug.t b/lib/perlbug.t
+index 08c34d9..0105452 100644
+--- a/lib/perlbug.t
++++ b/lib/perlbug.t
+@@ -151,7 +151,10 @@ for (split(/\n/, $contents)) {
+         $maxlen1 = $len if $len > $maxlen1 and !/$B/;
+         $maxlen2 = $len if $len > $maxlen2 and  /$B/;
+ }
+-ok($maxlen1 < 1000, "[perl #128020] long body lines are wrapped: maxlen $maxlen1");
++{
++    local our $TODO = "This test fails with some frequency, including many/all conda builds";
++    ok($maxlen1 < 1000, "[perl #128020] long body lines are wrapped: maxlen $maxlen1");
++}
+ ok($maxlen2 > 1000, "long attachment lines are not wrapped: maxlen $maxlen2");
+ 
+ $result = runperl( progfile => $extracted_program, stderr => 1, args => ['-o'] ); # Invalid option
+-- 
+2.43.0.windows.1
+

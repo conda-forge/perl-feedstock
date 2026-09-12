@@ -3,36 +3,13 @@ About perl-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/perl-feedstock/blob/main/LICENSE.txt)
 
-
-About perl
-----------
-
 Home: http://www.perl.org/
 
 Package license: GPL-1.0-or-later OR Artistic-1.0-Perl
 
 Summary: The Perl programming language interpreter.
 
-Development: https://perl5.git.perl.org/perl.git
-
-Documentation: https://www.perl.org/docs.html
-
-Perl 5 is a highly capable, feature-rich programming language with over 29
-years of development. Perl 5 runs on over 100 platforms from portables to
-mainframes and is suitable for both rapid prototyping and large scale
-development projects.
-
-
-About perl
-----------
-
-Home: http://www.perl.org/
-
-Package license: GPL-1.0-or-later OR Artistic-1.0-Perl
-
-Summary: The Perl programming language interpreter.
-
-Development: https://perl5.git.perl.org/perl.git
+Development: https://github.com/perl/perl5
 
 Documentation: https://www.perl.org/docs.html
 

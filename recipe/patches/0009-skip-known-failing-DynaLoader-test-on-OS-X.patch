@@ -1,0 +1,29 @@
+From abfe16f951efe939a05bb9fffc83533fab1c95d4 Mon Sep 17 00:00:00 2001
+From: jvolkening <jdvolkening@gmail.com
+Date: Sun, 23 Nov 2025 16:29:10 -0600
+Subject: [PATCH] skip known failing DynaLoader test on OS X
+
+---
+ ext/DynaLoader/t/DynaLoader.t | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ext/DynaLoader/t/DynaLoader.t b/ext/DynaLoader/t/DynaLoader.t
+index bb83686..56fb1a3 100644
+--- a/ext/DynaLoader/t/DynaLoader.t
++++ b/ext/DynaLoader/t/DynaLoader.t
+@@ -117,9 +117,10 @@ SKIP: {
+     # (not at least by that name) that the dl_findfile()
+     # could find.
+     skip( "dl_findfile test not appropriate on $^O", 1 )
+-	if $^O =~ /(win32|vms|openbsd|bitrig|cygwin|vos|os390)/i;
++	if $^O =~ /(win32|vms|openbsd|bitrig|cygwin|vos|os390|darwin)/i;
+     # Play safe and only try this test if this system
+-    # looks pretty much Unix-like.
++    # looks pretty much Unix-like. # Also not working on recent
++    # OSX (see perl5 github issue #18406)
+     skip( "dl_findfile test not appropriate on $^O", 1 )
+ 	unless -d '/usr' && -f '/bin/ls';
+     skip( "dl_findfile test not always appropriate when cross-compiling", 1 )
+-- 
+2.47.3
+

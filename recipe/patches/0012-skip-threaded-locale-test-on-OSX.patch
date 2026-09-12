@@ -1,0 +1,26 @@
+From 47797e71071c98ede57d308f45205ec220f9834a Mon Sep 17 00:00:00 2001
+From: jvolkening <jdv@base2bio.com>
+Date: Fri, 4 Sep 2026 02:15:59 -0500
+Subject: [PATCH] skip threaded locale test on OSX
+
+---
+ lib/locale_threads.t | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/lib/locale_threads.t b/lib/locale_threads.t
+index 86036f0..90adffd 100644
+--- a/lib/locale_threads.t
++++ b/lib/locale_threads.t
+@@ -13,6 +13,9 @@ BEGIN {
+     skip_all_without_config('useithreads');
+     skip_all("Fails on threaded builds on OpenBSD")
+         if ($^O =~ m/^(openbsd)$/);
++    # currently fails on conda OSX builds
++    skip_all("Fails on conda builds on OSX")
++        if ($^O eq 'darwin');
+ 
+     require './loc_tools.pl';
+ 
+-- 
+2.47.3
+

@@ -1,0 +1,60 @@
+--- ./Config.pm	2019-04-12 12:06:41.126189114 +0200
++++ ./Config.pm	2019-04-12 12:08:19.216265962 +0200
+@@ -107,6 +107,23 @@
+     die "&Config::AUTOLOAD failed on $Config::AUTOLOAD";
+ }
+ 
++use File::Basename;
++my $compilerroot = "";
++if (length $ENV{'CC'}) {
++  $compilerroot = dirname($ENV{'CC'})."/../";
++}
++elsif (length $ENV{'PREFIX'}) {
++  $compilerroot = $ENV{'PREFIX'}."/";
++}
++elsif (length $ENV{'_'}) {
++  $compilerroot = dirname($ENV{'_'})."/../";
++}
++
++my $sdkroot = "";
++if (length $ENV{'SDKROOT'}) {
++  $sdkroot = dirname($ENV{'SDKROOT'})."/";
++}
++
+ # tie returns the object, so the value returned to require will be true.
+ tie %Config, 'Config', {
+     archlibexp => relocate_inc('.../../lib/5.26.3/x86_64-linux-thread-multi'),
+--- ./Config_heavy.pl	2026-09-03 00:42:04.470920777 -0500
++++ ./Config_heavy.pl	2026-09-03 00:47:10.080751678 -0500
+@@ -170,6 +170,23 @@
+     $summary_expanded;
+ }
+ 
++use File::Basename;
++my $compilerroot = "";
++if (length $ENV{'CC'}) {
++  $compilerroot = dirname($ENV{'CC'})."/../";
++}
++elsif (length $ENV{'PREFIX'}) {
++  $compilerroot = $ENV{'PREFIX'}."/";
++}
++elsif (length $ENV{'_'}) {
++  $compilerroot = dirname($ENV{'_'})."/../";
++}
++
++my $sdkroot = "";
++if (length $ENV{'SDKROOT'}) {
++  $sdkroot = dirname($ENV{'SDKROOT'})."/";
++}
++
+ local *_ = \my $a;
+ $_ = <<'!END!';
+ Author=''
+@@ -1409,6 +1426,7 @@
+ zcat=''
+ zip='zip'
+ !END!
++$_ =~ s/__COMPILER_ROOT__/$compilerroot/g;
+ 
+ my $i = ord(8);
+ foreach my $c (7,6,5,4,3,2,1) { $i <<= 8; $i |= ord($c); }

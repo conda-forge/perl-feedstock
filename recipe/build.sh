@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CPU_COUNT=${CPU_COUNT:=1}
 if [[ "${build_platform}" == "osx-"* && "${target_platform}" == "osx-" && "${build_platform}" != "${target_platform}" ]]; then
   archflags="-arch x86_64 -arch arm64"
   export MACOSX_DEPLOYMENT_TARGET=11.0
@@ -101,12 +102,12 @@ _config_args+=(
 
 _config_args+=(
   "-Dsysman=${PREFIX}/man/man1"
-  "-Dman1dir=.../../man/man1"
-  "-Dman3dir=.../../man/man3"
+  "-Dman1dir="
+  "-Dman3dir="
 )
 
 ./Configure -de "${_config_args[@]}"
-make
+make -j${CPU_COUNT}
 
 # change permissions again after building
 chmod -R o-w "${SRC_DIR}"
@@ -115,13 +116,13 @@ chmod -R o-w "${SRC_DIR}"
 # lib/perlbug .................................................... # Failed test 21 - [perl \#128020] long body lines are wrapped: maxlen 1157 at ../lib/perlbug.t line 154
 # FAILED at test 21
 # https://rt.perl.org/Public/Bug/Display.html?id=128020
-# make test
-make install
+make test HARNESS_OPTIONS=j${CPU_COUNT}
+make install -j${CPU_COUNT}
 
 # Replace hard-coded BUILD_PREFIX by value from env as CC, CFLAGS etc need to be properly set to be usable by ExtUtils::MakeMaker module
 pushd "${perl_archlib/...\/../${PREFIX}}${perl_core}"
-patch -p1 < "${RECIPE_DIR}/dynamic_config.patch"
-sed -i.bak "s|${BUILD_PREFIX}|\$compilerroot|g" Config_heavy.pl
+patch -p1 < "${RECIPE_DIR}/patches/dynamic_config.patch"
+sed -i.bak "s|${BUILD_PREFIX}|__COMPILER_ROOT__|g" Config_heavy.pl
 
 sed -i.bak "s|${BUILD_PREFIX}|\$compilerroot|g" Config.pm
 sed -i.bak "s|cc => '\(.*\)'|cc => \"\1\"|g" Config.pm
